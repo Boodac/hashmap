@@ -1,11 +1,16 @@
 import List from "./linkedlist.js";
 
-const list = new List();
-
 export default class HashMap {
     #loadFactor = 0.75;
     #buckets = [...Array(16)];
     #capacity = this.#buckets.length;
+
+    constructor() {
+    }
+
+    report() {
+        return [...this.#buckets];
+    }
 
     hash(key) {
         let hash = 0;
@@ -18,24 +23,38 @@ export default class HashMap {
         return hash;
     };
 
-    set(pKey, pValue) {
-        let object = {
-            key: pKey,
-            value: pValue
-        }
+    set(key, value) {
+        let kvp = [
+            key,
+            value
+        ];
 
-        let hash = this.hash(pKey);
+        let hash = this.hash(key);
+
         if (hash < 0 || hash >= this.#capacity) {
             throw new Error("Trying to access index out of bounds");
         }
 
-        if(!this.#table[hash]) {
+        if(!this.#buckets[hash]) {
             let list = new List();
-            list.prepend(object);
+            list.prepend(kvp);
+            this.#buckets[hash] = list;
         } else {
-            this.#table[hash].append(object);
-        }
-    }
+            let workingList = this.#buckets[hash];
+            let reference = workingList.head;
+            while(reference) {
+                if(reference.value[0] === kvp[0]) {
+                    reference.value = kvp;
+                    break;
+                } else {
+                    reference = reference.nextNode;
+                }
+            }
+            if(reference === null) {
+                workingList.append(kvp);
+            };
+        };
+    };
 
     get(key) {
 
@@ -73,3 +92,14 @@ export default class HashMap {
         this.#loadFactor = factor;
     }
 };
+
+
+const hashmap = new HashMap();
+
+hashmap.set("carlos", "diaz");
+hashmap.set("carlos", "safijwf");
+hashmap.set("cArlos", "bejfsodjjaoj");
+
+let arr = hashmap.report();
+
+console.log(arr[0].toString());

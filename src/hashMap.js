@@ -54,43 +54,90 @@ export default class HashMap {
                 workingList.append(kvp);
             };
         };
+
+        // to do: check the size of buckets against the loadfactor, if it exceeds then double the capacity and (?)redistribute all items(?)
     };
 
     get(key) {
+        let index = this.hash(key);
+        if(!this.#buckets[index]) return null;
 
-    }
+        let workingList = this.#buckets[index];
+        let reference = workingList.head;
+
+        while(reference) {
+            if(reference.value[0] === key) {
+                return reference.value[1];
+            } else {
+                reference = reference.nextNode;
+            }
+        }
+
+        return null;
+    };
 
     has(key) {
+        let index = this.hash(key);
+        if(!this.#buckets[index]) return false;
 
-    }
+        let workingList = this.#buckets[index];
+        let reference = workingList.head;
+
+        while(reference) {
+            if(reference.value[0] === key) {
+                return true;
+            } else {
+                reference = reference.nextNode;
+            }
+        }
+
+        return false;
+    };
 
     remove(key) {
+        let index = this.hash(key);
+        if(!this.#buckets[index]) return false;
 
-    }
+        let workingList = this.#buckets[index];
+        let reference = workingList.head;
+        let i = 0;
+
+        while(reference) {
+            if(reference.value[0] === key) {
+                workingList.removeAt(i);
+                return true;
+            } else {
+                i++;
+                reference = reference.nextNode;
+            }
+        }
+
+        return false;
+    };
 
     get length () {
         return 1;
-    }
+    };
 
     clear() {
         
-    }
+    };
 
     keys() {
 
-    }
+    };
 
     values() {
 
-    }
+    };
 
     entries() {
 
-    }
+    };
 
     assignLoadFactor(factor) {
         this.#loadFactor = factor;
-    }
+    };
 };
 
 
@@ -99,7 +146,3 @@ const hashmap = new HashMap();
 hashmap.set("carlos", "diaz");
 hashmap.set("carlos", "safijwf");
 hashmap.set("cArlos", "bejfsodjjaoj");
-
-let arr = hashmap.report();
-
-console.log(arr[0].toString());

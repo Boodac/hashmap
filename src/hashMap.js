@@ -36,8 +36,7 @@ export default class HashMap {
         }
 
         if(!this.#buckets[hash]) {
-            let list = new List();
-            list.prepend(kvp);
+            let list = new List(kvp);
             this.#buckets[hash] = list;
         } else {
             let workingList = this.#buckets[hash];
@@ -103,11 +102,12 @@ export default class HashMap {
         let i = 0;
 
         while(reference) {
+            console.log(reference);
             if(reference.value[0] === key) {
                 workingList.removeAt(i);
                 return true;
             } else {
-                i++;
+                ++i;
                 reference = reference.nextNode;
             }
         }
@@ -116,7 +116,19 @@ export default class HashMap {
     };
 
     get length () {
-        return 1;
+        let counter = 0;
+
+        this.#buckets.forEach(bucket => {
+            if(bucket) {
+                let currentNode = bucket.head;
+                do {
+                    counter++
+                    currentNode = currentNode.nextNode;
+                } while (currentNode);
+            }
+        });
+
+        return counter;
     };
 
     clear() {
@@ -146,3 +158,10 @@ const hashmap = new HashMap();
 hashmap.set("carlos", "diaz");
 hashmap.set("carlos", "safijwf");
 hashmap.set("cArlos", "bejfsodjjaoj");
+hashmap.set("dsafoi", "fsaigjih");
+
+console.log(hashmap.remove("cAolos"));
+
+console.log(hashmap.report().toString());
+
+console.log(hashmap.length);

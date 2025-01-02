@@ -116,7 +116,7 @@ export default class HashMap {
         return false;
     };
 
-    get length () {
+    get length() {
         let counter = 0;
 
         this.#buckets.forEach(bucket => {

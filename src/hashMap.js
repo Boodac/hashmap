@@ -1,3 +1,8 @@
+// for clarity: yes there is a lot of duplicate seeming code in these methods, and it does seem to violate DRY. however, going this another way would
+// increase time complexity, and it would also create dependencies within the code that might be harder to maintain if the structure of the stored values ever
+// changes. For this reason, I have decided to duplicate loops and things of that nature as appropriate, so that e.g. .values() and .entries() can be decoupled
+// without further modification to any helper modules used.
+
 import List from "./linkedlist.js";
 
 export default class HashMap {

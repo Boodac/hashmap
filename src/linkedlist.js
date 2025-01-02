@@ -75,8 +75,8 @@ export default class LinkedList {
 
     removeAt(index) {
         let previousNode = this.at(index-1);
-        let workingNode = previousNode.nextNode;
-        previousNode.nextNode = workingNode.nextNode;
+        let nodeToRemove = previousNode.nextNode;
+        previousNode.nextNode = nodeToRemove.nextNode;
     };
 
     contains(value) {

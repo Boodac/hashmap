@@ -3,14 +3,33 @@ import List from "./linkedlist.js";
 export default class HashMap {
     #loadFactor = 0.75;
     #_DEFAULT_SIZE = 16;
+    #_CURRENT_SIZE = 0;
     #buckets = [...Array(this.#_DEFAULT_SIZE)];
-    #capacity = this.#buckets.length;
+    get #capacity () {
+        return this.#buckets.length;
+    };
+    get #currentLoad () {
+        let load = this.length;
+        return load / this.#capacity;
+    };
+    get length() {
+        let counter = 0;
+
+        this.#buckets.forEach(bucket => {
+            if(bucket) {
+                let currentNode = bucket.head;
+                do {
+                    counter++
+                    currentNode = currentNode.nextNode;
+                } while (currentNode);
+            }
+        });
+
+        return counter;
+    };
 
     constructor() {
-    }
-
-    report() {
-        return [...this.#buckets];
+        // hi mom
     }
 
     hash(key) {
@@ -55,7 +74,24 @@ export default class HashMap {
             };
         };
 
+        if(this.#currentLoad > this.#loadFactor) this.growMap();
         // to do: check the size of buckets against the loadfactor, if it exceeds then double the capacity and (?)redistribute all items(?)
+    };
+
+    growMap(currentMap = [... this.#buckets]) {
+        if(!this.#_CURRENT_SIZE) this.#_CURRENT_SIZE = this.#_DEFAULT_SIZE * 2;
+        else this.#_CURRENT_SIZE *= 2;
+        this.#buckets = [... Array(this.#_CURRENT_SIZE)];
+        currentMap.forEach((bucket) => {
+            if(bucket) {
+                let currentNode = bucket.head;
+                while(currentNode) { 
+                    let kvp = currentNode.value;
+                    this.set(kvp[0], kvp[1]);
+                    currentNode = currentNode.nextNode;
+                }
+            }
+        });
     };
 
     get(key) {
@@ -116,25 +152,9 @@ export default class HashMap {
         return false;
     };
 
-    get length() {
-        let counter = 0;
-
-        this.#buckets.forEach(bucket => {
-            if(bucket) {
-                let currentNode = bucket.head;
-                do {
-                    counter++
-                    currentNode = currentNode.nextNode;
-                } while (currentNode);
-            }
-        });
-
-        return counter;
-    };
-
     clear() {
         this.#buckets = [...Array(this.#_DEFAULT_SIZE)];
-        this.#capacity = this.#buckets.length;
+        this.#_CURRENT_SIZE = 0;
     };
 
     keys() {
@@ -191,15 +211,27 @@ export default class HashMap {
 };
 
 
-const hashmap = new HashMap();
+const test = new HashMap();
 
-hashmap.set("carlos", "diaz");
-hashmap.set("carlos", "safijwf");
-hashmap.set("cArlos", "bejfsodjjaoj");
-hashmap.set("dsafoi", "fsaigjih");
+test.set('apple', 'red')
+test.set('banana', 'yellow')
+test.set('carrot', 'orange')
+test.set('dog', 'brown')
+test.set('elephant', 'gray')
+test.set('frog', 'green')
+test.set('grape', 'purple')
+test.set('hat', 'black')
+test.set('ice cream', 'white')
+test.set('jacket', 'blue')
+test.set('kite', 'pink')
+test.set('lion', 'golden')
 
-console.log(hashmap.remove("cAolos"));
+console.log(test.report());
 
-console.log(hashmap.report().toString());
+test.set("moon", "silver");
 
-console.log(hashmap.entries());
+console.log(test.report());
+
+console.log(test.entries());
+console.log(test.keys());
+console.log(test.values());

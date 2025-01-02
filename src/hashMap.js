@@ -2,7 +2,8 @@ import List from "./linkedlist.js";
 
 export default class HashMap {
     #loadFactor = 0.75;
-    #buckets = [...Array(16)];
+    #_DEFAULT_SIZE = 16;
+    #buckets = [...Array(this.#_DEFAULT_SIZE)];
     #capacity = this.#buckets.length;
 
     constructor() {
@@ -132,19 +133,56 @@ export default class HashMap {
     };
 
     clear() {
-        
+        this.#buckets = [...Array(this.#_DEFAULT_SIZE)];
+        this.#capacity = this.#buckets.length;
     };
 
     keys() {
+        let arr = [];
 
+        this.#buckets.forEach(bucket => {
+            if(bucket) {
+                let currentNode = bucket.head;
+                while(currentNode) {
+                    arr.push(currentNode.value[0]);
+                    currentNode = currentNode.nextNode;
+                }
+            }
+        })
+
+        return arr;
     };
 
     values() {
+        let arr = [];
 
+        this.#buckets.forEach(bucket => {
+            if(bucket) {
+                let currentNode = bucket.head;
+                while(currentNode) {
+                    arr.push(currentNode.value[1]);
+                    currentNode = currentNode.nextNode;
+                }
+            }
+        })
+
+        return arr;
     };
 
     entries() {
+        let arr = [];
 
+        this.#buckets.forEach(bucket => {
+            if(bucket) {
+                let currentNode = bucket.head;
+                while(currentNode) {
+                    arr.push(currentNode.value);
+                    currentNode = currentNode.nextNode;
+                }
+            }
+        })
+        
+        return arr;
     };
 
     assignLoadFactor(factor) {
@@ -164,4 +202,4 @@ console.log(hashmap.remove("cAolos"));
 
 console.log(hashmap.report().toString());
 
-console.log(hashmap.length);
+console.log(hashmap.entries());
